@@ -1,0 +1,187 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: lau1guo3in1
+  name: 老國音 (sumi)
+  version: "2021/01/22"
+  author:
+    - 耶箍步<@iacobvs>
+  description: |
+   	基於前中華民國教育部頒行《校改國音字典》的老國音輸入法。
+    由iacobvs設計方案並參考其凡例作出修改。
+    感謝叔寍、涉江、玄簡、帥喵幫助錄入大量字頭。
+    以數字鍵4567及字母q標示五聲。
+  dependencies:
+    - stroke
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 漢字, 辣丁 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  - name: ascii_punct
+    states: [ ，。, ，． ]
+  - name: simplification
+    states: [ 正體, 規範 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator@custom_phrase
+    - reverse_lookup_translator
+    - script_translator
+  filters:
+    - simplifier
+    - uniquifier
+
+speller:
+  alphabet: 'zyxwvutsrqponmlkjihgfedcbażċṡŋˉˊˇˋˈ-'
+  delimiter: " '"
+  algebra:
+    #- abbrev/(?<=^.).*(?=.$)//
+
+    - derive/ˉ/hi/
+    - derive/ˊ/ha/
+    - derive/ˇ/hs/
+    - derive/ˋ/hk/
+    - derive/ˈ/hr/
+    - derive/h[iaskr]/hh/
+    - abbrev/h[iaskr]/h/
+
+    - derive/^ŋ//
+    - derive/[eo]/ǝ/
+
+    - derive/ż/zz/
+    - derive/ċ/cc/
+    - derive/ṡ/ss/
+    - derive/ŋ/q/
+    - derive/e/ee/
+    - derive/ǝ/e/
+
+translator:
+  dictionary: lau1guo3in1
+  spelling_hints: 8
+  preedit_format:
+    - xform/hi/ˉ/
+    - xform/ha/ˊ/
+    - xform/hs/ˇ/
+    - xform/hk/ˋ/
+    - xform/hr/ˈ/
+
+    - xform/zz/ż/
+    - xform/cc/ċ/
+    - xform/ss/ṡ/
+    - xform/q/ŋ/
+    - xform/e/ǝ/
+    - xform/ǝǝ/e/
+
+custom_phrase:
+  dictionary: ""
+  user_dict: custom_phrase
+  db_class: stabledb
+  enable_completion: false
+  enable_sentence: false
+  initial_quality: 1
+
+reverse_lookup:
+  dictionary: stroke
+  enable_completion: true
+  prefix: "`"
+  suffix: "'"
+  tips: 〔筆畫〕
+  preedit_format:
+    - xlit/hspnz/一丨丿丶乙/
+
+punctuator:
+  full_shape:
+    " " : { commit: "　" }
+    "<" : { commit: "，" }
+    ">" : { commit: "。" }
+    "?" : [ ？, ／, ÷ ]
+    ":" : [ ：, ； ]
+    "'" : { pair: [ "‘", "’" ] }
+    "\"" : { pair: [ "“", "”" ] }
+    "\\" : [ 、, ＼ ]
+    "|" : [ ·, ｜, "§", "¦" ]
+    "`" : ｀
+    "~" : ～
+    "!" : { commit: ！ }
+    "@" : [ ＠, ☯ ]
+    "#" : [ ＃, ⌘ ]
+    "%" : [ ％, "°", "℃" ]
+    "$" : [ ￥, "$", "€", "£", "¥", "¢", "¤" ]
+    "^" : { commit: …… }
+    "&" : ＆
+    "*" : [ ＊, ·, ・, ×, ※, ❂ ]
+    "(" : （
+    ")" : ）
+    "_" : [ ——, － ]
+    "+" : ＋
+    "=" : ＝
+    "[" : [ 「, 【, 《, 〔, ［ ]
+    "]" : [ 」, 】, 》, 〕, ］ ]
+    "{" : [ 『, 〖, 〈, ｛ ]
+    "}" : [ 』, 〗, 〉, ｝ ]
+  half_shape:
+    "<" : { commit: "，" }
+    ">" : { commit: "。" }
+    "?" : [ ？, ／, "/", ÷ ]
+    ":" : [ ：, ； ]
+    "'" : { pair: [ "‘", "’" ] }
+    "\"" : { pair: [ "“", "”" ] }
+    "\\" : [ 、, "\\", ＼ ]
+    "|" : [ ·, "|", ｜, "§", "¦" ]
+    "`" : "`"
+    "~" : "~"
+    "!" : { commit: ！ }
+    "@" : "@"
+    "#" : "#"
+    "%" : [ "%", ％, "°", "℃" ]
+    "$" : [ ￥, "$", "€", "£", "¥", "¢", "¤" ]
+    "^" : { commit: …… }
+    "&" : "&"
+    "*" : [ "*", ＊, ·, ・, ×, ※, ❂ ]
+    "(" : （
+    ")" : ）
+    "_" : [ ——, －, "-" ]
+    "+" : "+"
+    "=" : "="
+    "[" : [ 「, 【, 《, 〔, ［ ]
+    "]" : [ 」, 】, 》, 〕, ］ ]
+    "{" : [ 『, 〖, 〈, ｛ ]
+    "}" : [ 』, 〗, 〉, ｝ ]
+
+key_binder:
+  import_preset: default
+  bindings:
+    - { when: has_menu, accept: comma, send: comma }
+    - { when: has_menu, accept: period, send: period }
+    - { when: has_menu, accept: minus, send: minus }
+    - { when: paging, accept: minus, send: Page_Up }
+    - { when: has_menu, accept: equal, send: Page_Down }
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "`[a-z]*'?$"
+    email: "^[a-z][-_.0-9a-z]*@.*$"
+    uppercase: "^[A-Z][-_+.'0-9A-Za-z]*$"
+    url: "^(www[.]|https?:|ftp:|mailto:).*$"
+    reverse_lookup: "`[a-z]*'?$"
